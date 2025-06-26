@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог книг</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="container">  
+            <span class="Library">Library</span>
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Главная</a></li>
+                    <li><a href="/catalog.html">Каталог книг</a></li>
+                    <li class="active"><a href="#">Добавить книгу</a></li>
+                </ul>
+            </nav>
+        </header>
+
+    <title>Добавить новую книгу</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+        }
+        input, textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+    </style>
+
+
+<div class="hero container">
+<h1>Добавить книгу</h1>
+<form id="bookForm">
+    <input type="hidden" id="index" />
+    <label for="title">Название:</label>
+    <input type="text" id="title" required /><br>
+    <label for="author">Автор:</label>
+    <input type="text" id="author" required /><br>
+    <label for="genre">Жанр:</label>
+    <input type="text" id="genre" required /><br>
+    <button type="submit">Добавить</button>
+</form>
+
+<script>
+    document.getElementById('bookForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const index = document.getElementById('index').value;
+        const title = document.getElementById('title').value;
+        const author = document.getElementById('author').value;
+        const genre = document.getElementById('genre').value;
+
+        const books = JSON.parse(localStorage.getItem('books')) || [];
+        if (index) {
+            books[index] = { title, author, genre };
+        } else {
+            books.push({ title, author, genre });
+        }
+        localStorage.setItem('books', JSON.stringify(books));
+        
+        this.reset();
+    });
+</script>
+
+</body>
+</html>
