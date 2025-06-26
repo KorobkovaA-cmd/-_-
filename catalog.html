@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог книг</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="container">  
+            <span class="Library">Library</span>
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Главная</a></li>
+                    <li class="active"><a href="#">Каталог книг</a></li>
+                    <li><a href="/newbook.html">Добавить книгу</a></li>
+                </ul>
+            </nav>
+        </header>
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск книг</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+        }
+        input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="hero container">
+
+<h1>Список книг</h1>
+
+<form id="searchForm">
+    <input type="text" id="searchTitle" placeholder="Название книги">
+    <input type="text" id="searchAuthor" placeholder="Автор">
+    <input type="text" id="searchGenre" placeholder="Жанр">
+    <button type="submit">Поиск</button>
+</form>
+
+<div class="book-info">
+    <ul id="bookList"></ul>
+</div>
+
+<script>
+    const bookList = document.getElementById('bookList');
+    
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const title = document.getElementById('searchTitle').value.toLowerCase();
+        const author = document.getElementById('searchAuthor').value.toLowerCase();
+        const genre = document.getElementById('searchGenre').value.toLowerCase();
+        displayBooks(title, author, genre);
+    });
+
+    function displayBooks(title = '', author = '', genre = '') {
+        const books = JSON.parse(localStorage.getItem('books')) || [];
+        bookList.innerHTML = '';
+        const filteredBooks = books.filter(book => {
+            return (title ? book.title.toLowerCase().includes(title) : true) &&
+                   (author ? book.author.toLowerCase().includes(author) : true) &&
+                   (genre ? book.genre.toLowerCase().includes(genre) : true);
+        });
+
+        filteredBooks.forEach((book, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${book.title} - ${book.author} - ${book.genre}</span>
+                <button onclick="editBook(${index})">Редактировать</button>
+                <button onclick="deleteBook(${index})">Удалить</button>
+            `;
+            bookList.appendChild(li);
+        });
+    }
+
+    function editBook(index) {
+        const books = JSON.parse(localStorage.getItem('books'));
+        const book = books[index];
+        const title = prompt("Введите новое название книги:", book.title);
+        const author = prompt("Введите нового автора:", book.author);
+        const genre = prompt("Введите новый жанр:", book.genre);
+
+        if (title && author && genre) {
+            books[index] = { title, author, genre };
+            localStorage.setItem('books', JSON.stringify(books));
+            displayBooks();
+        }
+    }
+
+    function deleteBook(index) {
+        const books = JSON.parse(localStorage.getItem('books'));
+        books.splice(index, 1);
+        localStorage.setItem('books', JSON.stringify(books));
+        displayBooks();
+    }
+
+    window.onload = () => {
+        displayBooks();
+    };
+</script>
+
+</body>
+</html>
